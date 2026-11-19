@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><title>FortressNet | Automated Network Threat Detection & Dynamic Malware Analysis</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><meta name="theme-color" content="#050608">
+<link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+<meta name="description" content="FortressNet: a cybersecurity graduation project combining GNS3 attack simulation, Security Onion with Suricata and Zeek, and an isolated Python and AI-assisted malware sandbox.">
+<meta property="og:title" content="FortressNet | Automated Network Threat Detection &amp; Dynamic Malware Analysis">
+<meta property="og:description" content="GNS3 lab, Security Onion monitoring, and an isolated dynamic malware analysis sandbox.">
+<meta property="og:type" content="website">
+
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#050608;--panel:#0b0d12;--ink:#e8eaf0;--mut:#8b90a0;--red:#ff1e3c;--red2:#ff5a4d;--line:rgba(255,30,60,.22);box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+html{scroll-behavior:smooth;scroll-padding-top:72px;background:var(--bg)}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:400 17px/1.6 'Chakra Petch',system-ui,sans-serif;overflow-x:hidden;background-image:linear-gradient(rgba(255,30,60,.035) 1px,transparent 1px),linear-gradient(90deg,rgba(255,30,60,.035) 1px,transparent 1px);background-size:44px 44px}
+body::after{content:"";position:fixed;inset:0;pointer-events:none;background:radial-gradient(ellipse at 50% -10%,rgba(255,30,60,.18),transparent 55%);z-index:-1}
+a{color:inherit;text-decoration:none}.mono{font-family:'JetBrains Mono',ui-monospace,monospace}
+nav{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;display:flex;align-items:center;gap:22px;padding:12px 5vw;background:rgba(5,6,8,.85);backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+nav b{display:flex;gap:10px;align-items:center;font-size:19px;letter-spacing:.5px}nav b svg{width:30px;height:30px;color:var(--red)}
+nav .l{display:flex;gap:18px;margin-left:auto;font-size:14px;color:var(--mut);overflow-x:auto;white-space:nowrap}nav .l a:hover{color:var(--red)}
+section{padding:84px 5vw;max-width:1200px;margin:auto}
+.tag{font:600 13px 'JetBrains Mono',monospace;color:var(--red)}h2{font-size:clamp(28px,4vw,42px);margin:6px 0 8px;line-height:1.15}.sub{color:var(--mut);max-width:60ch;margin:0 0 36px}
+.hero{display:grid;grid-template-columns:1.1fr .9fr;gap:40px;align-items:center;min-height:86vh}
+.pill{display:inline-block;padding:4px 14px;border:1px solid var(--line);border-radius:99px;font:13px 'JetBrains Mono',monospace;color:var(--red2);background:rgba(255,30,60,.07)}
+h1{font-size:clamp(46px,8vw,92px);line-height:.95;margin:18px 0 10px;letter-spacing:2px;text-shadow:0 0 40px rgba(255,30,60,.55);animation:fl 5s infinite}
+h1 span{color:var(--red)}@keyframes fl{0%,92%,100%{opacity:1}94%{opacity:.7}96%{opacity:1}98%{opacity:.8}}
+.lead{font-size:20px;color:#c4c8d4;max-width:56ch}
+.btns{display:flex;flex-wrap:wrap;gap:12px;margin:26px 0}.btn{padding:12px 24px;border:1px solid var(--red);border-radius:6px;font-weight:600;transition:.2s}.btn.p{background:var(--red);color:#fff;box-shadow:0 0 28px rgba(255,30,60,.45)}.btn:hover{transform:translateY(-2px);box-shadow:0 0 34px rgba(255,30,60,.6)}
+.chips{display:flex;flex-wrap:wrap;gap:8px}.chip{display:flex;align-items:center;gap:7px;padding:6px 12px;background:var(--panel);border:1px solid #1d212b;border-radius:6px;font-size:14px}.chip svg{width:18px;height:18px}
+.term{background:#07080b;border:1px solid var(--line);border-radius:10px;box-shadow:0 0 60px rgba(255,30,60,.15);overflow:hidden}
+.term i{display:flex;gap:7px;align-items:center;padding:10px 14px;background:#0d0f15;font:12px 'JetBrains Mono',monospace;color:var(--mut);font-style:normal}.term i u{width:10px;height:10px;border-radius:50%;background:#ff5f56}.term i u+u{background:#ffbd2e}.term i u+u+u{background:#27c93f}
+.term pre{margin:0;padding:16px;min-height:300px;font:13px/1.65 'JetBrains Mono',monospace;color:#cfd3dc;white-space:pre-wrap}.g{color:#27c93f}.r{color:var(--red)}.y{color:#ffbd2e}.m{color:var(--mut)}
+.cur{display:inline-block;width:8px;height:15px;background:var(--red);vertical-align:-2px;animation:b 1s steps(1) infinite}@keyframes b{50%{opacity:0}}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:1px;background:var(--line);border:1px solid var(--line);border-radius:10px;overflow:hidden;padding:0;max-width:1200px;margin:0 auto}
+.stats div{background:var(--panel);padding:26px;text-align:center}.stats b{display:block;font-size:44px;color:var(--red);text-shadow:0 0 20px rgba(255,30,60,.5)}.stats span{color:var(--mut);font-size:14px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:18px}
+.card{position:relative;background:linear-gradient(160deg,#0e1016,#08090d);border:1px solid #1b1f29;border-radius:10px;padding:24px;transition:.25s}
+.card:hover{border-color:var(--red);box-shadow:0 0 30px rgba(255,30,60,.2);transform:translateY(-3px)}
+.card h3{margin:10px 0 6px;font-size:20px}.card p{margin:0;color:var(--mut);font-size:15.5px}
+.ic{width:46px;height:46px;padding:9px;border-radius:10px;background:rgba(255,30,60,.1);border:1px solid var(--line);color:var(--red)}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:18px}.two ul{padding-left:18px;margin:12px 0 0;color:#b5bac7;font-size:15.5px}.two li{margin:6px 0}.two li::marker{color:var(--red)}
+.flow{display:flex;flex-wrap:wrap;gap:0;align-items:stretch}.flow>div{flex:1 1 150px;position:relative;background:var(--panel);border:1px solid var(--line);padding:20px 16px;text-align:center;margin-right:26px;border-radius:8px}
+.flow>div:not(:last-child)::after{content:"▶";position:absolute;right:-24px;top:50%;transform:translateY(-50%);color:var(--red);font-size:14px;animation:p 1.4s infinite}@keyframes p{50%{opacity:.25}}
+.flow svg{width:42px;height:42px;margin-bottom:6px}.flow b{display:block;font-size:16px}.flow small{color:var(--mut);font-size:13px}
+.topo{background:#07080b;border:1px solid var(--line);border-radius:12px;padding:10px;box-shadow:0 0 60px rgba(255,30,60,.1)}.topo svg{width:100%;height:auto;display:block}
+.nd rect{fill:#0d0f15;stroke:var(--line);stroke-width:1.5}.nd text{fill:var(--ink);font:600 14px 'Chakra Petch',sans-serif}.nd .s{fill:var(--mut);font:11px 'JetBrains Mono',monospace}.nd:hover rect{stroke:var(--red)}
+.ln{stroke:rgba(255,30,60,.45);stroke-width:2;fill:none}.ln.d{stroke-dasharray:6 6;stroke:#27c93f}
+.logos{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:14px}
+.lg{display:flex;flex-direction:column;align-items:center;gap:8px;padding:22px 12px;background:var(--panel);border:1px solid #1b1f29;border-radius:10px;text-align:center;transition:.25s}
+.lg:hover{border-color:var(--c);box-shadow:0 0 28px color-mix(in srgb,var(--c) 40%,transparent);transform:translateY(-4px)}.lg svg{width:58px;height:58px;color:var(--c);filter:drop-shadow(0 0 8px color-mix(in srgb,var(--c) 60%,transparent))}.lg b{font-size:16px}.lg small{color:var(--mut);font-size:12.5px;line-height:1.3}
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}.tabs button{background:var(--panel);color:var(--mut);border:1px solid #1d212b;padding:10px 20px;border-radius:6px;font:600 15px 'Chakra Petch';cursor:pointer;display:flex;gap:8px;align-items:center}.tabs button svg{width:18px;height:18px}.tabs button.on{color:#fff;border-color:var(--red);background:rgba(255,30,60,.14);box-shadow:0 0 20px rgba(255,30,60,.25)}
+.pane{display:none;grid-template-columns:1fr 1fr;gap:18px}.pane.on{display:grid}.pane .term pre{min-height:0}
+.steps{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;counter-reset:s}.steps div{counter-increment:s;background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:18px 14px;position:relative}.steps div::before{content:counter(s,decimal-leading-zero);font:600 13px 'JetBrains Mono';color:var(--red)}.steps b{display:block;font-size:18px;margin:4px 0}.steps p{margin:0;font-size:14px;color:var(--mut);line-height:1.45}
+.warn{margin-top:18px;padding:18px 22px;border:1px solid var(--red);border-left-width:5px;border-radius:8px;background:rgba(255,30,60,.07);color:#ffc9cf;font-size:15.5px}
+.tl{position:relative;display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:16px;padding-top:26px}.tl::before{content:"";position:absolute;top:8px;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--red),transparent)}
+.tl div{position:relative}.tl div::before{content:"";position:absolute;top:-24px;left:0;width:14px;height:14px;border-radius:50%;background:var(--red);box-shadow:0 0 16px var(--red)}.tl b{color:var(--red)}.tl p{margin:2px 0 0;color:#b5bac7;font-size:15px}
+.team .card{text-align:center}.av{width:72px;height:72px;margin:0 auto 10px;border-radius:50%;display:grid;place-items:center;border:2px solid var(--red);background:#0d0f15;font:700 24px 'Chakra Petch';color:var(--red);box-shadow:0 0 22px rgba(255,30,60,.35)}
+.ck{list-style:none;padding:0;margin:0;display:grid;gap:12px}.ck li{padding:14px 18px 14px 50px;background:var(--panel);border:1px solid #1b1f29;border-radius:8px;position:relative;color:#c4c8d4}.ck li::before{content:"✓";position:absolute;left:18px;color:var(--red);font-weight:700}.ck b{color:var(--ink)}
+footer{border-top:1px solid var(--line);padding:40px 5vw;text-align:center;color:var(--mut);font-size:14px}footer b{display:block;color:var(--ink);font-size:20px;margin-bottom:8px}
+.rv{opacity:0;transform:translateY(22px);transition:.7s}.rv.in{opacity:1;transform:none}
+@media(max-width:860px){.hero,.two,.pane{grid-template-columns:1fr}.steps{grid-template-columns:1fr 1fr}nav .l{display:none}.flow>div{margin:0 0 26px}.flow>div:not(:last-child)::after{right:50%;top:auto;bottom:-24px;transform:translateX(50%) rotate(90deg)}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.rv{opacity:1;transform:none}}
+:focus-visible{outline:2px solid var(--red);outline-offset:3px}
+</style></head><body>
+<svg width="0" height="0" style="position:absolute"><defs>
+<symbol id="fort" viewBox="0 0 32 32"><path fill="none" stroke="currentColor" stroke-width="1.8" d="M16 2 4 6v9c0 7 5 12 12 15 7-3 12-8 12-15V6z"/><path fill="currentColor" d="M9 22V12h2v2h2v-2h2v2h2v-2h2v2h2v-2h2v10h-3v-4a2 2 0 0 0-4 0v4z"/></symbol>
+<symbol id="kali" viewBox="0 0 32 32"><path fill="currentColor" d="M3 4c9 1 17 5 26 13-6-2-10-1-13 2 5-1 9 1 13 6-7-3-12-2-17 3 2-6 0-9-5-14 4 1 7 1 9 3-3-6-8-9-13-13z"/></symbol>
+<symbol id="linux" viewBox="0 0 32 32"><ellipse cx="16" cy="19" rx="8" ry="10" fill="currentColor"/><ellipse cx="16" cy="9" rx="5" ry="6" fill="currentColor"/><ellipse cx="16" cy="21" rx="4.5" ry="7" fill="#050608" opacity=".85"/><path fill="#ff9d2e" d="M13 11h6l-3 3zM7 28c0-2 3-2 5-1l-1 3zM25 28c0-2-3-2-5-1l1 3z"/><circle cx="14" cy="8" r="1.2" fill="#050608"/><circle cx="18" cy="8" r="1.2" fill="#050608"/></symbol>
+<symbol id="onion" viewBox="0 0 32 32"><path fill="currentColor" d="M16 2c1 3 1 5 0 7 5 2 11 7 11 14 0 5-5 8-11 8S5 28 5 23c0-7 6-12 11-14-1-2-1-4 0-7z"/><path fill="none" stroke="#050608" stroke-width="1.6" d="M16 9c-4 4-5 11-5 21M16 9c4 4 5 11 5 21M16 9v21"/></symbol>
+<symbol id="suri" viewBox="0 0 32 32"><path fill="currentColor" d="M4 5c5 0 9 1 12 4 3-3 7-4 12-4v12c0 7-6 11-12 14C10 28 4 24 4 17z"/><circle cx="11.5" cy="14" r="3.4" fill="#050608"/><circle cx="20.5" cy="14" r="3.4" fill="#050608"/><circle cx="11.5" cy="14" r="1.3" fill="currentColor"/><circle cx="20.5" cy="14" r="1.3" fill="currentColor"/><path fill="#050608" d="M14 19h4l-2 4z"/></symbol>
+<symbol id="zeek" viewBox="0 0 32 32"><circle cx="16" cy="16" r="13" fill="none" stroke="currentColor" stroke-width="2.4"/><path fill="none" stroke="currentColor" stroke-width="3" stroke-linejoin="round" d="M9.5 10h13l-13 12h13"/></symbol>
+<symbol id="gns3" viewBox="0 0 32 32"><g fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="16" cy="16" r="12"/><ellipse cx="16" cy="16" rx="5" ry="12"/><path d="M4 16h24M6 9h20M6 23h20"/></g></symbol>
+<symbol id="vyos" viewBox="0 0 32 32"><path fill="none" stroke="currentColor" stroke-width="2" d="M16 2l12 7v14l-12 7L4 23V9z"/><path fill="currentColor" d="M9 10h4l3 9 3-9h4l-5 13h-4z"/></symbol>
+<symbol id="win" viewBox="0 0 32 32"><path fill="currentColor" d="M3 6l11-2v11H3zM16 3.6L29 1.5V15H16zM3 17h11v11L3 26zM16 17h13v13.5L16 28.4z"/></symbol>
+<symbol id="meta" viewBox="0 0 32 32"><g fill="none" stroke="currentColor" stroke-width="2"><circle cx="16" cy="16" r="12"/><circle cx="16" cy="16" r="6"/></g><path fill="currentColor" d="M14.5 1h3v7h-3zM14.5 24h3v7h-3zM1 14.5h7v3H1zM24 14.5h7v3h-7z"/><circle cx="16" cy="16" r="2" fill="currentColor"/></symbol>
+<symbol id="py" viewBox="0 0 32 32"><path fill="currentColor" d="M15 2c-6 0-6 3-6 3v4h7v1H7S2 10 2 16s4 6 4 6h3v-3s0-4 4-4h7s4 0 4-4V6s0-4-9-4zm-3 3a1.3 1.3 0 1 1 0 2.600A1.300 1.300 0 0 1 12 5z"/><path fill="#ffd43b" d="M17 30c6 0 6-3 6-3v-4h-7v-1h9s5 1 5-5-4-6-4-6h-3v3s0 4-4 4h-7s-4 0-4 4v6s0 4 9 4zm3-3a1.300 1.300 0 1 1 0-2.600 1.300 1.300 0 0 1 0 2.600z"/></symbol>
+<symbol id="ai" viewBox="0 0 32 32"><path fill="currentColor" d="M13 3l2.500 8.500L24 14l-8.500 2.500L13 25l-2.500-8.500L2 14l8.500-2.500zM25 18l1.300 4.200L30 24l-3.700 1.800L25 30l-1.300-4.200L20 24l3.700-1.800z"/></symbol>
+<symbol id="box" viewBox="0 0 32 32"><g fill="none" stroke="currentColor" stroke-width="1.8"><path d="M16 3l11 6v14l-11 6-11-6V9z"/><path d="M5 9l11 6 11-6M16 15v14"/></g></symbol>
+<symbol id="eye" viewBox="0 0 32 32"><path fill="none" stroke="currentColor" stroke-width="2" d="M2 16s5-9 14-9 14 9 14 9-5 9-14 9S2 16 2 16z"/><circle cx="16" cy="16" r="4.500" fill="currentColor"/></symbol>
+<symbol id="bug" viewBox="0 0 32 32"><path fill="currentColor" d="M16 8c-4 0-6 3-6 6v6c0 4 3 7 6 7s6-3 6-7v-6c0-3-2-6-6-6zM12 5l2 3h4l2-3-1.500-1-1.500 2h-2l-1.500-2zM1 14l8 2v2l-8-1zM31 14l-8 2v2l8-1zM2 25l8-4v2l-7 4zM30 25l-8-4v2l7 4z"/></symbol>
+<symbol id="folder" viewBox="0 0 32 32"><path fill="currentColor" d="M2 7h10l3 3h15v17H2z"/></symbol>
+<symbol id="mitm" viewBox="0 0 32 32"><g fill="currentColor"><circle cx="5" cy="16" r="3.500"/><circle cx="27" cy="16" r="3.500"/><circle cx="16" cy="16" r="4" fill="#ff1e3c"/></g><path fill="none" stroke="currentColor" stroke-width="1.800" d="M8 16h4M20 16h4"/></symbol>
+<symbol id="arp" viewBox="0 0 32 32"><g fill="none" stroke="currentColor" stroke-width="1.800"><rect x="12" y="3" width="8" height="6"/><rect x="2" y="23" width="8" height="6"/><rect x="22" y="23" width="8" height="6"/><path d="M16 9v7M6 23v-7h20v7"/></g></symbol>
+<symbol id="net" viewBox="0 0 32 32"><g fill="none" stroke="currentColor" stroke-width="1.800"><rect x="11" y="3" width="10" height="8"/><rect x="2" y="21" width="10" height="8"/><rect x="20" y="21" width="10" height="8"/><path d="M16 11v5M7 21v-5h18v5"/></g></symbol>
+</defs></svg>
+
+<nav><b><svg><use href="#fort"/></svg>FORTRESSNET</b><div class="l"><a href="#problem">Problem</a><a href="#architecture">Architecture</a><a href="#topology">Topology</a><a href="#stack">Tech Stack</a><a href="#tests">Attack Tests</a><a href="#sandbox">Sandbox</a><a href="#team">Team</a><a href="#roadmap">Roadmap</a></div></nav>
+
+<section class="hero" id="home"><div>
+<span class="pill">Graduation Project · Cybersecurity</span>
+<h1>FORTRESS<span>NET</span></h1>
+<p class="lead">Automated Network Threat Detection &amp; Dynamic Malware Analysis. A practical lab that catches attacks on the wire and safely dissects suspicious files.</p>
+<div class="btns"><a class="btn p" href="#architecture">Explore the Architecture</a><a class="btn" href="#tests">See the Attack Tests</a></div>
+<div class="chips"><span class="chip"><svg style="color:#367bf0"><use href="#gns3"/></svg>GNS3</span><span class="chip"><svg style="color:#5aa9ff"><use href="#kali"/></svg>Kali Linux</span><span class="chip"><svg style="color:#ff6b3d"><use href="#onion"/></svg>Security Onion</span><span class="chip"><svg style="color:#ff9d2e"><use href="#suri"/></svg>Suricata</span><span class="chip"><svg style="color:#27c93f"><use href="#zeek"/></svg>Zeek</span><span class="chip"><svg style="color:#ffd43b"><use href="#py"/></svg>Python</span></div></div>
+<div class="term"><i><u></u><u></u><u></u>fortressnet: live-detection</i><pre id="t"></pre></div></section>
+
+<div class="stats rv"><div><b data-n="5">0</b><span>Team members</span></div><div><b data-n="6">0</b><span>Lab systems</span></div><div><b data-n="3">0</b><span>Attack scenarios</span></div><div><b data-n="10">0</b><span>Weeks to delivery</span></div></div>
+
+<section id="problem"><div class="tag">// the problem</div><h2>Why combine monitoring with malware analysis?</h2><p class="sub">Visibility without investigation leaves gaps, and investigation without visibility has nothing to start from.</p>
+<div class="grid rv"><div class="card"><svg class="ic"><use href="#eye"/></svg><h3>Network visibility</h3><p>Security teams need to see suspicious traffic, unusual connections and attack patterns.</p></div><div class="card"><svg class="ic"><use href="#mitm"/></svg><h3>Threat detection</h3><p>FTP misuse, ARP poisoning and man-in-the-middle activity threaten confidentiality and integrity.</p></div><div class="card"><svg class="ic"><use href="#bug"/></svg><h3>Malware investigation</h3><p>Suspicious files must be examined in a controlled, isolated environment to understand their behavior.</p></div></div></section>
+
+<section id="solution"><div class="tag">// proposed solution</div><h2>Two connected parts</h2><p class="sub">Network defense and dynamic malware analysis, working as one pipeline.</p>
+<div class="two rv"><div class="card"><svg class="ic"><use href="#net"/></svg><h3>Part 1: Network monitoring &amp; detection</h3><ul><li>Build a virtual network in GNS3</li><li>Connect Kali Linux, VyOS, Windows 7 and Metasploitable</li><li>Deploy Security Onion</li><li>Monitor traffic with Suricata and Zeek</li><li>Review alerts and investigate suspicious activity</li></ul></div>
+<div class="card"><svg class="ic"><use href="#bug"/></svg><h3>Part 2: Dynamic malware analysis</h3><ul><li>Create a separate, isolated sandbox</li><li>Automate safe analysis steps with Python</li><li>Run authorized samples only, inside the sandbox</li><li>Collect process, file-system and network behavior</li><li>Summarize behavior and indicators with an AI agent</li></ul></div></div></section>
+
+<section id="architecture"><div class="tag">// architecture</div><h2>Two environments, one workflow</h2><p class="sub">A GNS3 network lab for attack and detection, and an isolated sandbox for malware.</p>
+<div class="flow rv"><div><svg style="color:#5aa9ff"><use href="#gns3"/></svg><b>GNS3 LAN</b><small>Virtual network</small></div><div><svg style="color:#ff5a4d"><use href="#kali"/></svg><b>Attack simulation</b><small>Kali Linux</small></div><div><svg style="color:#ff6b3d"><use href="#onion"/></svg><b>Security Onion</b><small>Suricata + Zeek</small></div><div><svg style="color:#ffd43b"><use href="#py"/></svg><b>Python automation</b><small>Sandbox workflow</small></div><div><svg style="color:#c77dff"><use href="#ai"/></svg><b>AI report</b><small>Behavior summary</small></div></div>
+<div class="warn rv"><b>Isolation rule:</b> the sandbox stays separate from the normal lab network, with no unrestricted internet access.</div></section>
+
+<section id="topology"><div class="tag">// gns3 topology</div><h2>The lab, live</h2><p class="sub">Green dashed link: mirrored traffic feeding Security Onion. Red packets: attack traffic crossing the router.</p>
+<div class="topo rv"><svg viewBox="0 0 820 380" role="img" aria-label="GNS3 topology: Kali, VyOS, switch, Windows 7, Metasploitable, Security Onion">
+<path id="p1" class="ln" d="M150 190H300"/><path id="p2" class="ln" d="M420 190H500"/><path id="p3" class="ln" d="M560 175L650 80"/><path id="p4" class="ln" d="M560 190H650"/><path id="p5" class="ln d" d="M560 205L650 300"/>
+<g fill="#ff1e3c"><circle r="4"><animateMotion dur="2s" repeatCount="indefinite"><mpath href="#p1"/></animateMotion></circle><circle r="4"><animateMotion dur="1.2s" repeatCount="indefinite"><mpath href="#p2"/></animateMotion></circle><circle r="4"><animateMotion dur="1.5s" repeatCount="indefinite"><mpath href="#p4"/></animateMotion></circle><circle r="4"><animateMotion dur="1.8s" repeatCount="indefinite"><mpath href="#p3"/></animateMotion></circle></g>
+<circle r="4" fill="#27c93f"><animateMotion dur="1.4s" repeatCount="indefinite"><mpath href="#p5"/></animateMotion></circle>
+<g class="nd"><rect x="20" y="150" width="130" height="80" rx="10"/><use href="#kali" x="40" y="165" width="34" height="34" style="color:#5aa9ff"/><text x="82" y="186">Kali Linux</text><text class="s" x="82" y="204">Attacker VM</text><text class="s" x="35" y="222">Attack simulation</text></g>
+<g class="nd"><rect x="300" y="150" width="120" height="80" rx="10"/><use href="#vyos" x="314" y="165" width="34" height="34" style="color:#ff9d2e"/><text x="354" y="186">VyOS</text><text class="s" x="316" y="212">Router + Firewall</text></g>
+<g class="nd"><rect x="500" y="165" width="60" height="50" rx="10"/><use href="#net" x="515" y="173" width="30" height="30" style="color:#8b90a0"/><text class="s" x="505" y="228">Switch</text></g>
+<g class="nd"><rect x="650" y="40" width="150" height="80" rx="10"/><use href="#win" x="664" y="56" width="32" height="32" style="color:#3b9bff"/><text x="704" y="76">Windows 7</text><text class="s" x="704" y="94">Client VM</text></g>
+<g class="nd"><rect x="650" y="150" width="150" height="80" rx="10"/><use href="#meta" x="664" y="166" width="32" height="32" style="color:#ff1e3c"/><text x="704" y="184">Metasploitable</text><text class="s" x="704" y="202">Target VM</text></g>
+<g class="nd"><rect x="650" y="260" width="150" height="80" rx="10"/><use href="#onion" x="664" y="276" width="32" height="32" style="color:#ff6b3d"/><text x="704" y="294">Security Onion</text><text class="s" x="704" y="312">Monitoring sensor</text></g></svg></div></section>
+
+<section id="stack"><div class="tag">// tech stack</div><h2>Tools and systems</h2><p class="sub">Every component of the FortressNet lab.</p>
+<div class="logos rv">
+<div class="lg" style="--c:#5aa9ff"><svg><use href="#kali"/></svg><b>Kali Linux</b><small>Attack simulation platform</small></div>
+<div class="lg" style="--c:#ffd43b"><svg><use href="#linux"/></svg><b>Linux</b><small>Host and sandbox foundation</small></div>
+<div class="lg" style="--c:#ff6b3d"><svg><use href="#onion"/></svg><b>Security Onion</b><small>Monitoring and analysis platform</small></div>
+<div class="lg" style="--c:#ff9d2e"><svg><use href="#suri"/></svg><b>Suricata</b><small>Network IDS alerts</small></div>
+<div class="lg" style="--c:#27c93f"><svg><use href="#zeek"/></svg><b>Zeek</b><small>Connection and protocol logs</small></div>
+<div class="lg" style="--c:#367bf0"><svg><use href="#gns3"/></svg><b>GNS3</b><small>Network topology emulation</small></div>
+<div class="lg" style="--c:#ff8a3d"><svg><use href="#vyos"/></svg><b>VyOS</b><small>Router and firewall</small></div>
+<div class="lg" style="--c:#3b9bff"><svg><use href="#win"/></svg><b>Windows 7</b><small>Client VM</small></div>
+<div class="lg" style="--c:#ff1e3c"><svg><use href="#meta"/></svg><b>Metasploitable</b><small>Intentionally vulnerable target</small></div>
+<div class="lg" style="--c:#4b8bbe"><svg><use href="#py"/></svg><b>Python</b><small>Sandbox automation</small></div>
+<div class="lg" style="--c:#c77dff"><svg><use href="#ai"/></svg><b>AI agent</b><small>Behavior summaries</small></div>
+<div class="lg" style="--c:#27c93f"><svg><use href="#box"/></svg><b>Isolated sandbox</b><small>Disposable VM with snapshots</small></div></div>
+
+<div class="two rv" style="margin-top:28px;grid-template-columns:repeat(3,1fr)"><div class="card"><svg class="ic" style="color:#ff9d2e"><use href="#suri"/></svg><h3>Suricata</h3><p>Detects suspicious patterns and known signatures, and produces alerts for investigation.</p></div><div class="card"><svg class="ic" style="color:#27c93f"><use href="#zeek"/></svg><h3>Zeek</h3><p>Creates connection and protocol logs that show how hosts communicate.</p></div><div class="card"><svg class="ic" style="color:#ff6b3d"><use href="#onion"/></svg><h3>Security Onion</h3><p>One central platform to review alerts, correlate observations and investigate events.</p></div></div></section>
+
+<section id="tests"><div class="tag">// planned network security tests</div><h2>Three attack scenarios</h2><p class="sub">Run only inside the isolated GNS3 lab.</p>
+<div class="tabs"><button class="on" data-k="0"><svg><use href="#folder"/></svg>FTP</button><button data-k="1"><svg><use href="#mitm"/></svg>Man-in-the-Middle</button><button data-k="2"><svg><use href="#arp"/></svg>ARP Poisoning</button></div>
+<div class="pane on"><div class="card"><h3>FTP</h3><p>Test FTP traffic and authentication behavior. Observe protocol activity and identify insecure or suspicious access.</p></div><div class="term"><i><u></u><u></u><u></u>suricata: fast.log</i><pre><span class="m">// expected evidence</span>
+<span class="r">[**] FTP cleartext authentication</span>
+Zeek: ftp.log · user / command / reply
+<span class="g">&gt; Detection recorded</span></pre></div></div>
+<div class="pane"><div class="card"><h3>Man-in-the-Middle</h3><p>Simulate a controlled MITM scenario between lab hosts. Inspect traffic changes and relevant network alerts.</p></div><div class="term"><i><u></u><u></u><u></u>security-onion: alerts</i><pre><span class="m">// expected evidence</span>
+<span class="r">[**] Traffic path altered between hosts</span>
+Zeek: conn.log · unexpected flow
+<span class="g">&gt; Detection recorded</span></pre></div></div>
+<div class="pane"><div class="card"><h3>ARP Poisoning</h3><p>Generate controlled ARP spoofing activity. Observe ARP changes and investigate the resulting traffic behavior.</p></div><div class="term"><i><u></u><u></u><u></u>security-onion: alerts</i><pre><span class="m">// expected evidence</span>
+<span class="r">[**] ARP spoofing activity</span>
+Zeek: arp / conn logs · MAC changes
+<span class="g">&gt; Detection recorded</span></pre></div></div>
+<div class="warn">For each test: document the setup, generate traffic, review Security Onion, Suricata and Zeek output, and record detection results.</div></section>
+
+<section id="sandbox"><div class="tag">// dynamic malware analysis</div><h2>The isolated sandbox</h2><p class="sub">A separate controlled environment for observing suspicious files.</p>
+<div class="steps rv"><div><b>Submit</b><p>Select a sample file.</p></div><div><b>Isolate</b><p>Use a disposable isolated VM.</p></div><div><b>Observe</b><p>Collect process, file and network behavior.</p></div><div><b>Automate</b><p>Python runs the steps and gathers results.</p></div><div><b>Explain</b><p>The AI agent summarizes behavior and indicators.</p></div></div>
+<div class="warn rv"><b>Safety boundary:</b> harmless training samples or authorized samples only. Shared folders, clipboard and host integration are disabled, network access is restricted, and the VM snapshot is reverted after each run.</div></section>
+
+<section id="workflow"><div class="tag">// end to end</div><h2>How the two parts work together</h2><p class="sub"></p>
+<div class="flow rv"><div><svg style="color:#5aa9ff"><use href="#gns3"/></svg><b>Network lab</b><small>Normal and attack traffic</small></div><div><svg style="color:#ff6b3d"><use href="#onion"/></svg><b>Security Onion</b><small>Suricata and Zeek observe</small></div><div><svg style="color:#ff1e3c"><use href="#eye"/></svg><b>Investigation</b><small>Review alerts</small></div><div><svg style="color:#27c93f"><use href="#box"/></svg><b>Sandbox</b><small>Analyze a suspicious file</small></div><div><svg style="color:#c77dff"><use href="#ai"/></svg><b>Python + AI</b><small>Collect and summarize</small></div></div></section>
+
+<section id="team" class="team"><div class="tag">// the team</div><h2>Five members, connected responsibilities</h2><p class="sub"></p>
+<div class="grid rv">
+<div class="card"><div class="av">1</div><h3>Network Design</h3><p>GNS3 topology, VyOS routing and firewall, IP addressing and connectivity.</p></div>
+<div class="card"><div class="av">2</div><h3>Attack Simulation</h3><p>Kali Linux, FTP, MITM and ARP-poisoning test scenarios.</p></div>
+<div class="card"><div class="av">3</div><h3>Security Onion</h3><p>Deploy Security Onion, configure Suricata and Zeek, review alerts and logs.</p></div>
+<div class="card"><div class="av">4</div><h3>Sandbox &amp; Python</h3><p>Isolated sandbox workflow and Python automation for execution and data collection.</p></div>
+<div class="card"><div class="av">5</div><h3>AI Analysis &amp; Integration</h3><p>AI behavior summaries, integration, workflow testing and documentation.</p></div></div>
+<p class="sub" style="margin-top:30px">Raniem Alashi · Faisal Ashour · Omar · Mohammad Jumaa · Mohammed Qaisi</p></section>
+
+<section id="roadmap"><div class="tag">// roadmap</div><h2>Ten weeks to a working demo</h2><p class="sub">A focused plan that prioritizes an end-to-end demonstration.</p>
+<div class="tl rv"><div><b>Weeks 1–2</b><p>Finalize scope, topology and lab requirements.</p></div><div><b>Weeks 3–4</b><p>Build GNS3 network and configure VyOS firewall.</p></div><div><b>Weeks 5–6</b><p>Deploy Security Onion; configure Suricata and Zeek.</p></div><div><b>Weeks 7–8</b><p>Build isolated sandbox and Python automation.</p></div><div><b>Week 9</b><p>Add AI-assisted analysis and integrate workflows.</p></div><div><b>Week 10</b><p>Run tests, evaluate results, prepare final demo.</p></div></div></section>
+
+<section id="eval"><div class="tag">// evaluation</div><h2>Expected results</h2><p class="sub">Repeatable evidence for every claim.</p>
+<ul class="ck rv"><li><b>Network visibility:</b> capture and review relevant traffic and protocol activity.</li><li><b>Detection:</b> document which FTP, MITM and ARP-poisoning activities produced useful alerts or logs.</li><li><b>Investigation:</b> show how Suricata alerts and Zeek logs support analysis.</li><li><b>Sandbox safety:</b> demonstrate isolation and snapshot recovery after a sample run.</li><li><b>Automation:</b> measure how consistently Python collects results and produces a summary.</li><li><b>AI usefulness:</b> evaluate whether summaries accurately reflect observed behavior.</li></ul></section>
+
+<footer><b>FORTRESSNET</b>Graduation Project Proposal · Automated Network Threat Detection &amp; Dynamic Malware Analysis<br>All tests run only in isolated, controlled laboratory environments.</footer>
+
+<script>
+const L=[['<span class="m">$</span> gns3 start fortressnet-lab',0],['<span class="g">[ok]</span> VyOS · Kali · Win7 · Metasploitable · Security Onion online',1],['<span class="m">$</span> so-status',0],['<span class="g">[ok]</span> suricata  zeek  elastic  running',1],['<span class="y">[kali]</span> arpspoof → 10.0.1.20',0],['<span class="r">[ALERT]</span> ARP spoofing detected · sensor: suricata',1],['<span class="r">[ALERT]</span> FTP cleartext login · zeek: ftp.log',1],['<span class="m">$</span> python sandbox.py --sample training.bin',0],['<span class="g">[ok]</span> VM isolated · behavior captured · snapshot reverted',1],['<span class="y">[AI]</span> summary: spawns process, writes file, no outbound traffic',1]];
+const t=document.getElementById('t');let i=0;
+function step(){if(i>=L.length){t.innerHTML+='<span class="cur"></span>';return}t.innerHTML=t.innerHTML.replace(/<span class="cur"><\/span>/,'')+L[i][0]+'\n<span class="cur"></span>';i++;setTimeout(step,L[i-1][1]?900:600)}
+step();
+const io=new IntersectionObserver(e=>e.forEach(x=>{if(x.isIntersecting){x.target.classList.add('in');x.target.querySelectorAll('[data-n]').forEach(c=>{const n=+c.dataset.n;let k=0;const f=setInterval(()=>{c.textContent=++k;if(k>=n)clearInterval(f)},900/n)});io.unobserve(x.target)}}),{threshold:.15});
+document.querySelectorAll('.rv').forEach(e=>io.observe(e));
+document.querySelectorAll('.tabs button').forEach(b=>b.onclick=()=>{document.querySelectorAll('.tabs button,.pane').forEach(x=>x.classList.remove('on'));b.classList.add('on');document.querySelectorAll('.pane')[b.dataset.k].classList.add('on')});
+</script></body></html>
